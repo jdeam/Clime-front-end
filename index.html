@@ -1,16 +1,49 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Clime</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css">
-    <!-- <link rel="stylesheet" href="style.css"> -->
-  </head>
-  <body>
-    <canvas id="myChart" width="100" height="100"></canvas>
-    <script src='https://unpkg.com/axios/dist/axios.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js'></script>
-    <script src='./clime.js'></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clime - A Weather Comparison Tool for Climbers & Outdoorspeople</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="nav has-shadow" id="top">
+    <div class="container">
+      <div class="nav-left">
+        <a class="nav-item" href="../index.html">
+          <h1 class='title is-2'>Clime<h1>
+        </a>
+      </div>
+      <div class="nav-right nav-menu">
+        <a class="nav-item is-tab">
+          Find Crags
+        </a>
+        <a class="nav-item is-tab">
+          Favorites
+        </a>
+        <span class="nav-item">
+          <a class="button">
+            Log in
+          </a>
+          <a class="button is-info">
+            Sign up
+          </a>
+        </span>
+      </div>
+    </div>
+  </nav>
+  <section class="section">
+    <div id='ds-container' class='panel forecast-panel'>
+      <p class='panel-heading'><b>Index, WA</b></p>
+      <canvas class='forecast' id="myChart" height='60'></canvas>
+    </div>
+  </section>
+  <script src='./moment.js'></script>
+  <script src='https://unpkg.com/axios/dist/axios.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js'></script>
+  <script src='./clime.js'></script>
+</body>
 </html>
