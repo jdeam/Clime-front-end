@@ -1,5 +1,4 @@
-//Index: 47.82, -121.556
-let ctx = document.getElementById("myChart").getContext("2d");
+//Maps API key: AIzaSyARIp9NV4oT7T5BzWnBaR6Nq3DZ5p8Fe9s
 
 function renderChart(ctx, forecast) {
   new Chart(ctx, {
@@ -24,6 +23,9 @@ function renderChart(ctx, forecast) {
     },
     options: {
       elements: {
+        line: {
+          tension: 0.5
+        },
         point: {
           radius: 1.5
         }
@@ -100,14 +102,33 @@ function renderChart(ctx, forecast) {
   });
 }
 
-let forecast;
-let saved;
-axios.get('http://localhost:3000/forecast')
+const forecastArea = document.querySelector('#forecasts');
+axios.get('http://localhost:3000/crags')
   .then(result => {
-    forecast = result.data.forecast;
-    renderChart(ctx, result.data.forecast);
+    crags = result.data.crags;
+    crags.forEach(crag => {
+      let forecastDiv = document.createElement('div');
+      forecastDiv.classList.add('panel');
+      forecastDiv.classList.add('forecast-panel');
+
+      let forecastHeading = document.createElement('p');
+      forecastHeading.classList = 'panel-heading';
+      forecastHeading.innerHTML = `<b>${crag.name}</b>`;
+      forecastDiv.appendChild(forecastHeading);
+
+      let forecastCanvas = document.createElement('canvas');
+      forecastCanvas.classList = 'forecast';
+      forecastCanvas.height = 60;
+      forecastCanvas.style.paddingRight = '1%';
+      forecastDiv.appendChild(forecastCanvas);
+
+      forecastArea.appendChild(forecastDiv);
+
+      let ctx = forecastCanvas.getContext('2d');
+      renderChart(ctx, crag.forecast);
+    });
   });
 
-navigator.geolocation.getCurrentPosition(function(position) {
-  console.log(position);
-});
+// navigator.geolocation.getCurrentPosition(function(position) {
+//   console.log(position);
+// });

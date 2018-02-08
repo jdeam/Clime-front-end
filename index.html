@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Clime - A Weather Comparison Tool for Climbers & Outdoorspeople</title>
+  <title>Clime</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css">
   <link rel="stylesheet" href="style.css">
@@ -35,12 +35,10 @@
       </div>
     </div>
   </nav>
-  <section class="section">
-    <div id='ds-container' class='panel forecast-panel'>
-      <p class='panel-heading'><b>Index, WA</b></p>
-      <canvas class='forecast' id="myChart" height='60'></canvas>
-    </div>
-  </section>
+  <div class='container'>
+    <section class="section" id='forecasts'>
+    </section>
+  </div>
   <script src='./moment.js'></script>
   <script src='https://unpkg.com/axios/dist/axios.min.js'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js'></script>

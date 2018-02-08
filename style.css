@@ -2525,6 +2525,7 @@ a.box:active {
 
 .title.is-2 {
   font-size: 40px;
+  margin-left: 20px;
 }
 
 .title.is-2 code {
