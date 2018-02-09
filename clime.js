@@ -1,4 +1,8 @@
 //Maps API key: AIzaSyARIp9NV4oT7T5BzWnBaR6Nq3DZ5p8Fe9s
+//
+// navigator.geolocation.getCurrentPosition(function(position) {
+//   console.log(position);
+// });
 
 function renderChart(ctx, forecast) {
   new Chart(ctx, {
@@ -23,16 +27,10 @@ function renderChart(ctx, forecast) {
     },
     options: {
       elements: {
-        line: {
-          tension: 0.5
-        },
-        point: {
-          radius: 1.5
-        }
+        line: { tension: 0.5 },
+        point: { radius: 1.5 }
       },
-      legend: {
-        display: false
-      },
+      legend: { display: false},
       tooltips : {
         intersect: false,
         callbacks: {
@@ -48,10 +46,7 @@ function renderChart(ctx, forecast) {
           }
         }
       },
-      hover: {
-        mode: 'nearest',
-        intersect: false
-      },
+      hover: { mode: 'nearest', intersect: false },
       scales: {
         xAxes: [{
           type: 'time',
@@ -62,16 +57,6 @@ function renderChart(ctx, forecast) {
               day: 'ddd, MMM D'
             }
           },
-          gridLines: {
-            offsetGridLines: false,
-            lineWidth: 1
-          },
-          ticks: {
-            source: 'auto',
-            callback: function(value, index, values) {
-              return value;
-            }
-          }
         }],
         yAxes: [{
           id: 'Temp',
@@ -119,7 +104,8 @@ axios.get('http://localhost:3000/crags')
       let forecastCanvas = document.createElement('canvas');
       forecastCanvas.classList = 'forecast';
       forecastCanvas.height = 60;
-      forecastCanvas.style.paddingRight = '1%';
+      forecastCanvas.style.paddingRight = '1.5%';
+      forecastCanvas.style.paddingTop = '0.75%';
       forecastDiv.appendChild(forecastCanvas);
 
       forecastArea.appendChild(forecastDiv);
@@ -128,7 +114,3 @@ axios.get('http://localhost:3000/crags')
       renderChart(ctx, crag.forecast);
     });
   });
-
-// navigator.geolocation.getCurrentPosition(function(position) {
-//   console.log(position);
-// });
