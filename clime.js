@@ -90,18 +90,18 @@ function renderChart(ctx, forecast) {
 const forecastArea = document.querySelector('#forecasts');
 axios.get('http://localhost:3000/crags')
   .then(result => {
-    crags = result.data.crags;
+    const crags = result.data.crags;
     crags.forEach(crag => {
-      let forecastDiv = document.createElement('div');
+      const forecastDiv = document.createElement('div');
       forecastDiv.classList.add('panel');
       forecastDiv.classList.add('forecast-panel');
 
-      let forecastHeading = document.createElement('p');
+      const forecastHeading = document.createElement('p');
       forecastHeading.classList = 'panel-heading';
-      forecastHeading.innerHTML = `<b>${crag.name}</b>`;
+      forecastHeading.innerHTML = `<b>${crag.name}, ${crag.state}</b>`;
       forecastDiv.appendChild(forecastHeading);
 
-      let forecastCanvas = document.createElement('canvas');
+      const forecastCanvas = document.createElement('canvas');
       forecastCanvas.classList = 'forecast';
       forecastCanvas.height = 60;
       forecastCanvas.style.paddingRight = '1.5%';
@@ -114,3 +114,7 @@ axios.get('http://localhost:3000/crags')
       renderChart(ctx, crag.forecast);
     });
   });
+
+axios.get('http://localhost:3000/crags/1').then(result => {
+  console.log(result.data);
+});
