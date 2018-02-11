@@ -6712,3 +6712,8 @@ a.panel-block:hover {
 .forecast {
   margin: 1%;
 }
+
+#map {
+  height: 300px;
+  width: 80%;
+}
