@@ -1,14 +1,4 @@
-const key = 'AIzaSyARIp9NV4oT7T5BzWnBaR6Nq3DZ5p8Fe9s';
-
-// navigator.geolocation.getCurrentPosition(function(position) {
-//   console.log(position);
-// });
-
-// let userId = JSON.parse(localStorage.getItem('userId')) || createNewUser();
-//
-// function createNewUser() {
-//
-// }
+const gKey = 'AIzaSyARIp9NV4oT7T5BzWnBaR6Nq3DZ5p8Fe9s';
 
 function renderChart(ctx, forecast) {
   new Chart(ctx, {
@@ -93,40 +83,63 @@ function renderChart(ctx, forecast) {
   });
 }
 
-const forecastArea = document.querySelector('#forecasts');
-axios.get('http://localhost:3000/crags')
-  .then(result => {
-    const crags = result.data.crags;
-    crags.forEach(crag => {
-      const forecastDiv = document.createElement('div');
-      forecastDiv.classList.add('panel');
-      forecastDiv.classList.add('forecast-panel');
+function renderForecasts(crags) {
+  crags.forEach(crag => {
+    const forecastDiv = document.createElement('div');
+    forecastDiv.classList.add('panel');
+    forecastDiv.classList.add('forecast-panel');
 
-      const forecastHeading = document.createElement('p');
-      forecastHeading.classList = 'panel-heading';
-      forecastHeading.innerHTML = `<b>${crag.name}, ${crag.state}</b>`;
-      forecastDiv.appendChild(forecastHeading);
+    const forecastHeading = document.createElement('p');
+    forecastHeading.classList = 'panel-heading';
+    forecastHeading.innerHTML = `<b>${crag.name}, ${crag.state}</b>`;
+    forecastDiv.appendChild(forecastHeading);
 
-      const forecastCanvas = document.createElement('canvas');
-      forecastCanvas.classList = 'forecast';
-      forecastCanvas.height = 60;
-      forecastCanvas.style.paddingRight = '1.5%';
-      forecastCanvas.style.paddingTop = '0.75%';
-      forecastDiv.appendChild(forecastCanvas);
+    const forecastCanvas = document.createElement('canvas');
+    forecastCanvas.classList = 'forecast';
+    forecastCanvas.height = 60;
+    forecastCanvas.style.paddingRight = '1.5%';
+    forecastCanvas.style.paddingTop = '0.75%';
+    forecastDiv.appendChild(forecastCanvas);
 
-      forecastArea.appendChild(forecastDiv);
+    forecastArea.appendChild(forecastDiv);
 
-      let ctx = forecastCanvas.getContext('2d');
-      renderChart(ctx, crag.forecast);
-    });
+    let ctx = forecastCanvas.getContext('2d');
+    renderChart(ctx, crag.forecast);
   });
+}
+
+function clearForecasts() {
+  while (forecastArea.children.length) {
+    forecastArea.removeChild(forecastArea.lastChild);
+  }
+}
+
+const forecastArea = document.querySelector('#forecasts');
+
+function buildPath(input) {
+  let searchInput = input.trim().toLowerCase().replace(' ', '');
+  let url = 'https://maps.googleapis.com/maps/api/geocode/json?address';
+  return `${url}=${searchInput}&key=${gKey}`;
+}
 
 const submitButton = document.querySelector('#submit');
 submitButton.addEventListener('click', (event) => {
   event.preventDefault();
+  clearForecasts();
   let searchInput = document.querySelector('#search-input').value;
-  console.log(searchInput);
-})
+  axios.get(buildPath(searchInput)).then(result => {
+    let coordsObj = result.data.results[0].geometry.location;
+    let coords = `${coordsObj.lat.toFixed(2)},${coordsObj.lng.toFixed(2)}`;
+    axios.get(`http://localhost:3000/crags/${coords}`).then(result => {
+      const crags = result.data.crags
+      renderForecasts(crags);
+    });
+  });
+});
 
 // axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=98103&key=${key}`)
 //   .then(result => console.log(result));
+
+// navigator.geolocation.getCurrentPosition(function(position) {
+//   console.log(position);
+// });
