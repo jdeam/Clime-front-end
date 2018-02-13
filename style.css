@@ -6713,7 +6713,16 @@ a.panel-block:hover {
   margin: 1%;
 }
 
-#map {
-  height: 300px;
-  width: 80%;
+#search-section {
+  height: 85px;
+}
+
+#search-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+#search {
+  width: 30%;
 }

@@ -1,8 +1,14 @@
-//Maps API key: AIzaSyARIp9NV4oT7T5BzWnBaR6Nq3DZ5p8Fe9s
-//
+const key = 'AIzaSyARIp9NV4oT7T5BzWnBaR6Nq3DZ5p8Fe9s';
+
 // navigator.geolocation.getCurrentPosition(function(position) {
 //   console.log(position);
 // });
+
+// let userId = JSON.parse(localStorage.getItem('userId')) || createNewUser();
+//
+// function createNewUser() {
+//
+// }
 
 function renderChart(ctx, forecast) {
   new Chart(ctx, {
@@ -115,14 +121,12 @@ axios.get('http://localhost:3000/crags')
     });
   });
 
-// var map;
-// function initMap() {
-// map = new google.maps.Map(document.getElementById('map'), {
-//   zoom: 2,
-//   center: new google.maps.LatLng(2.8,-187.3),
-//   mapTypeId: 'terrain'
-// });
+const submitButton = document.querySelector('#submit');
+submitButton.addEventListener('click', (event) => {
+  event.preventDefault();
+  let searchInput = document.querySelector('#search-input').value;
+  console.log(searchInput);
+})
 
-axios.get('http://localhost:3000/crags/1').then(result => {
-  console.log(result.data);
-});
+// axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=98103&key=${key}`)
+//   .then(result => console.log(result));
