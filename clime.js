@@ -1,4 +1,10 @@
-const gKey = 'AIzaSyARIp9NV4oT7T5BzWnBaR6Nq3DZ5p8Fe9s';
+let user = localStorage.getItem('user');
+if (!user) {
+  axios.post('http://localhost:3000/users/').then(result => {
+    user = result.data.user.id;
+    localStorage.setItem('user', user);
+  });
+}
 
 function renderChart(ctx, forecast) {
   new Chart(ctx, {
@@ -116,10 +122,8 @@ function clearForecasts() {
 
 const forecastArea = document.querySelector('#forecasts');
 
-function buildPath(input) {
-  let searchInput = input.trim().toLowerCase().replace(' ', '');
-  let url = 'https://maps.googleapis.com/maps/api/geocode/json?address';
-  return `${url}=${searchInput}&key=${gKey}`;
+function validate(input) {
+  return input.trim().toLowerCase().replace(' ', '');
 }
 
 const submitButton = document.querySelector('#submit');
@@ -127,18 +131,12 @@ submitButton.addEventListener('click', (event) => {
   event.preventDefault();
   clearForecasts();
   let searchInput = document.querySelector('#search-input').value;
-  axios.get(buildPath(searchInput)).then(result => {
-    let coordsObj = result.data.results[0].geometry.location;
-    let coords = `${coordsObj.lat.toFixed(2)},${coordsObj.lng.toFixed(2)}`;
-    axios.get(`http://localhost:3000/crags/${coords}`).then(result => {
+  axios.get(`http://localhost:3000/crags/${validate(searchInput)}`)
+    .then(result => {
       const crags = result.data.crags
       renderForecasts(crags);
     });
-  });
 });
-
-// axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=98103&key=${key}`)
-//   .then(result => console.log(result));
 
 // navigator.geolocation.getCurrentPosition(function(position) {
 //   console.log(position);
