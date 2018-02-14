@@ -1,8 +1,9 @@
-let user = localStorage.getItem('user');
+let user = JSON.parse(localStorage.getItem('user'));
 if (!user) {
-  axios.post('http://localhost:3000/users/').then(result => {
-    user = result.data.user.id;
-    localStorage.setItem('user', user);
+  newUser = uuidv1();
+  axios.post('http://localhost:3000/users/', { newUser }).then(result => {
+    user = result.data.user;
+    localStorage.setItem('user', JSON.stringify(user));
   });
 }
 
