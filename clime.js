@@ -1,13 +1,18 @@
+const path = 'http://localhost:3000';
 let user = JSON.parse(localStorage.getItem('user'));
-if (!user) {
+let searchResults;
+
+if (user) {
+  axios.get(`${path}/users/${user.uuid}/favorites`).then(result => {
+    user.favorites = result.data.crags;
+  });
+} else {
   newUser = uuidv1();
-  axios.post('http://localhost:3000/users/', { newUser }).then(result => {
+  axios.post(`${path}/users/`, { newUser }).then(result => {
     user = result.data.user;
     localStorage.setItem('user', JSON.stringify(user));
   });
 }
-
-localStorage.removeItem('user');
 
 function renderChart(ctx, forecast) {
   new Chart(ctx, {
@@ -92,9 +97,13 @@ function renderChart(ctx, forecast) {
   });
 }
 
-function createPlusButton(crag) {
+// function createPlusButton(crag) {
+//
+// }
 
-}
+// function createMinusButton(crag) {
+//
+// }
 
 function renderForecasts(crags) {
   crags.forEach(crag => {
@@ -128,6 +137,7 @@ function clearForecasts() {
 }
 
 const forecastArea = document.querySelector('#forecasts');
+const searchArea = document.querySelector('#search');
 
 function validate(input) {
   return input.trim().toLowerCase().replace(' ', '');
@@ -138,13 +148,35 @@ submitButton.addEventListener('click', (event) => {
   event.preventDefault();
   clearForecasts();
   let searchInput = document.querySelector('#search-input').value;
-  axios.get(`http://localhost:3000/crags/${validate(searchInput)}`)
+  axios.get(`${path}/crags/${validate(searchInput)}`)
     .then(result => {
-      const crags = result.data.crags
-      renderForecasts(crags);
+      searchResults = result.data.crags
+      renderForecasts(searchResults);
     });
 });
 
-// navigator.geolocation.getCurrentPosition(function(position) {
-//   console.log(position);
-// });
+const findCragsButton = document.querySelector('#find-crags');
+const favoriteButton = document.querySelector('#favorites');
+favoriteButton.addEventListener('click', (e) => {
+  if (findCragsButton.classList.contains('is-active')) {
+    findCragsButton.classList.remove('is-active');
+  }
+  if (!e.target.classList.contains('is-active')) {
+    e.target.classList.add('is-active');
+  }
+  clearForecasts();
+  searchArea.style.display = 'none';
+  renderForecasts(user.favorites);
+});
+
+findCragsButton.addEventListener('click', (e) => {
+  if (favoriteButton.classList.contains('is-active')) {
+    favoriteButton.classList.remove('is-active');
+  }
+  if (!e.target.classList.contains('is-active')) {
+    e.target.classList.add('is-active');
+  }
+  clearForecasts();
+  searchArea.style.display = 'block';
+  renderForecasts(searchResults);
+})
