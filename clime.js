@@ -7,6 +7,8 @@ if (!user) {
   });
 }
 
+localStorage.removeItem('user');
+
 function renderChart(ctx, forecast) {
   new Chart(ctx, {
     type: 'line',
