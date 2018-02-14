@@ -89,6 +89,10 @@ function renderChart(ctx, forecast) {
   });
 }
 
+function createPlusButton(crag) {
+
+}
+
 function renderForecasts(crags) {
   crags.forEach(crag => {
     const forecastDiv = document.createElement('div');
