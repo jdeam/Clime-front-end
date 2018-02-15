@@ -7,8 +7,7 @@ if (user) {
     user.favorites = result.data.crags;
   });
 } else {
-  newUser = uuidv1();
-  axios.post(`${path}/users/`, { newUser }).then(result => {
+  axios.post(`${path}/users/`).then(result => {
     user = result.data.user;
     localStorage.setItem('user', JSON.stringify(user));
   });
@@ -101,7 +100,7 @@ function createPlusButton(crag) {
   const plusButton = document.createElement('a');
   plusButton.className = 'plus';
   const plusImage = document.createElement('img');
-  plusImage.src = './images/plus.svg';
+  plusImage.src = './images/heart.svg';
   plusButton.appendChild(plusImage);
   plusButton.addEventListener('click', (e) => {
     axios.post(`${path}/users/${user.uuid}/favorites`, { cragId: crag.id })
@@ -125,7 +124,7 @@ function createMinusButton(crag) {
   const minusButton = document.createElement('a');
   minusButton.className = 'minus';
   const minusImage = document.createElement('img');
-  minusImage.src = './images/minus.svg';
+  minusImage.src = './images/x.svg';
   minusButton.appendChild(minusImage);
   minusButton.addEventListener('click', (e) => {
     axios.delete(`${path}/users/${user.uuid}/favorites/${crag.id}`)
@@ -211,6 +210,7 @@ submitButton.addEventListener('click', (event) => {
 
 const findCragsButton = document.querySelector('#find-crags');
 const favoriteButton = document.querySelector('#favorites');
+
 favoriteButton.addEventListener('click', (e) => {
   if (findCragsButton.classList.contains('is-active')) {
     findCragsButton.classList.remove('is-active');
@@ -237,4 +237,4 @@ findCragsButton.addEventListener('click', (e) => {
   if (searchResults) {
     renderForecasts(searchResults);
   }
-})
+});
