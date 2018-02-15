@@ -6726,3 +6726,8 @@ a.panel-block:hover {
 #search-form {
   width: 30%;
 }
+
+p img {
+  float: right;
+  height: 20px;
+}

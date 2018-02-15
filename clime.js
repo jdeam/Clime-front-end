@@ -1,6 +1,6 @@
 const path = 'http://localhost:3000';
 let user = JSON.parse(localStorage.getItem('user'));
-let searchResults;
+let searchResults = null;
 
 if (user) {
   axios.get(`${path}/users/${user.uuid}/favorites`).then(result => {
@@ -97,13 +97,54 @@ function renderChart(ctx, forecast) {
   });
 }
 
-// function createPlusButton(crag) {
-//
-// }
+function createPlusButton(crag) {
+  const plusButton = document.createElement('a');
+  plusButton.className = 'plus';
+  const plusImage = document.createElement('img');
+  plusImage.src = './images/plus.svg';
+  plusButton.appendChild(plusImage);
+  plusButton.addEventListener('click', (e) => {
+    axios.post(`${path}/users/${user.uuid}/favorites`, { cragId: crag.id })
+      .then(result => {
+        if (result.data.favorite) {
+          user.favorites.push(crag);
+          let minusButton = plusButton.parentNode.querySelector('.minus');
+          minusButton.style.display = 'inline';
+          plusButton.style.display = 'none';
+          if (favoriteButton.classList.contains('is-active')) {
+            clearForecasts();
+            renderForecasts(user.favorites);
+          }
+        }
+      });
+  });
+  return plusButton;
+}
 
-// function createMinusButton(crag) {
-//
-// }
+function createMinusButton(crag) {
+  const minusButton = document.createElement('a');
+  minusButton.className = 'minus';
+  const minusImage = document.createElement('img');
+  minusImage.src = './images/minus.svg';
+  minusButton.appendChild(minusImage);
+  minusButton.addEventListener('click', (e) => {
+    axios.delete(`${path}/users/${user.uuid}/favorites/${crag.id}`)
+      .then(result => {
+        if (result.data.deleted) {
+          let i = user.favorites.findIndex(favorite => favorite.id === crag.id);
+          user.favorites.splice(i, 1);
+          let plusButton = minusButton.parentNode.querySelector('.plus');
+          plusButton.style.display = 'inline';
+          minusButton.style.display = 'none';
+          if (favoriteButton.classList.contains('is-active')) {
+            clearForecasts();
+            renderForecasts(user.favorites);
+          }
+        }
+      });
+  });
+  return minusButton;
+}
 
 function renderForecasts(crags) {
   crags.forEach(crag => {
@@ -113,7 +154,20 @@ function renderForecasts(crags) {
 
     const forecastHeading = document.createElement('p');
     forecastHeading.classList = 'panel-heading';
-    forecastHeading.innerHTML = `<b>${crag.name}, ${crag.state}</b>`;
+
+    let minusButton = createMinusButton(crag);
+    forecastHeading.appendChild(minusButton);
+    let plusButton = createPlusButton(crag);
+    forecastHeading.appendChild(plusButton);
+    if (user.favorites.find(favorite => favorite.id === crag.id)) {
+      plusButton.style.display = 'none';
+    } else {
+      minusButton.style.display = 'none';
+    }
+
+    let cragName = document.createElement('b');
+    cragName.textContent = `${crag.name}, ${crag.state}`;
+    forecastHeading.appendChild(cragName);
     forecastDiv.appendChild(forecastHeading);
 
     const forecastCanvas = document.createElement('canvas');
@@ -166,7 +220,9 @@ favoriteButton.addEventListener('click', (e) => {
   }
   clearForecasts();
   searchArea.style.display = 'none';
-  renderForecasts(user.favorites);
+  if (user.favorites.length) {
+    renderForecasts(user.favorites);
+  }
 });
 
 findCragsButton.addEventListener('click', (e) => {
@@ -178,5 +234,7 @@ findCragsButton.addEventListener('click', (e) => {
   }
   clearForecasts();
   searchArea.style.display = 'block';
-  renderForecasts(searchResults);
+  if (searchResults) {
+    renderForecasts(searchResults);
+  }
 })
