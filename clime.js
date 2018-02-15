@@ -201,11 +201,13 @@ submitButton.addEventListener('click', (event) => {
   event.preventDefault();
   clearForecasts();
   let searchInput = document.querySelector('#search-input').value;
-  axios.get(`${path}/crags/${validate(searchInput)}`)
-    .then(result => {
-      searchResults = result.data.crags
-      renderForecasts(searchResults);
-    });
+  if (searchInput) {
+    axios.get(`${path}/crags/${validate(searchInput)}`)
+      .then(result => {
+        searchResults = result.data.crags
+        renderForecasts(searchResults);
+      });
+  }
 });
 
 const findCragsButton = document.querySelector('#find-crags');
