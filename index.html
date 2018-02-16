@@ -20,6 +20,9 @@
         <a class="nav-item is-tab is-active" id="find-crags">
           Find Crags
         </a>
+        <a class="nav-item is-tab" id="add-a-crag">
+          Add a Crag
+        </a>
         <a class="nav-item is-tab" id="favorites">
           My Favorites
         </a>
@@ -39,6 +42,29 @@
         </div>
       </div>
     </section>
+    <section class="section" id="add-crags" style="display: none">
+      <div class="field crag-field" id="crag-name">
+        <label class="label">Name</label>
+        <div class="control">
+          <input class="input" type="text" placeholder='E.g. "Red River Gorge"'>
+        </div>
+      </div>
+      <div class="field crag-field" id="crag-lat">
+        <label class="label">Lat.</label>
+        <div class="control">
+          <input class="input" type="text" placeholder='E.g. "47.823"'>
+        </div>
+      </div>
+      <div class="field crag-field" id="crag-lng">
+        <label class="label">Lng.</label>
+        <div class="control">
+          <input class="input" type="text" placeholder='E.g. "-121.456"'>
+        </div>
+      </div>
+      <div class="control">
+        <button class="button is-primary" id='crag-submit'>Add crag</button>
+      </div>
+    </section>
     <section class="section" id='forecasts'>
     </section>
   </div>
@@ -48,7 +74,7 @@
       <p> Powered by <a href="https://darksky.net/">Dark Sky</a>.</p>
     </div>
   </div>
-</footer>
+  </footer>
   <script src='./moment.js'></script>
   <script src='https://unpkg.com/axios/dist/axios.min.js'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js'></script>

@@ -1,6 +1,7 @@
 const path = 'http://localhost:3000';
 let user = JSON.parse(localStorage.getItem('user'));
 let searchResults = null;
+let cragAdded = null;
 
 if (user) {
   axios.get(`${path}/users/${user.uuid}/favorites`).then(result => {
@@ -146,6 +147,7 @@ function createMinusButton(crag) {
 }
 
 function renderForecasts(crags) {
+  forecastArea.style.display = 'block';
   crags.forEach(crag => {
     const forecastDiv = document.createElement('div');
     forecastDiv.classList.add('panel');
@@ -191,15 +193,23 @@ function clearForecasts() {
 
 const forecastArea = document.querySelector('#forecasts');
 const searchArea = document.querySelector('#search');
+const addCragsArea = document.querySelector('#add-crags');
 
 function validate(input) {
   return input.trim().toLowerCase().replace(' ', '');
 }
 
+const searchForm = document.querySelector('#search-input');
+searchForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  console.log('blah');
+})
+
 const submitButton = document.querySelector('#submit');
 submitButton.addEventListener('click', (event) => {
   event.preventDefault();
   clearForecasts();
+  forecastArea.style.display = 'none';
   let searchInput = document.querySelector('#search-input').value;
   if (searchInput) {
     axios.get(`${path}/crags/${validate(searchInput)}`)
@@ -212,22 +222,31 @@ submitButton.addEventListener('click', (event) => {
 
 const findCragsButton = document.querySelector('#find-crags');
 const favoriteButton = document.querySelector('#favorites');
+const addCragsButton = document.querySelector('#add-a-crag');
 
 favoriteButton.addEventListener('click', (e) => {
   if (findCragsButton.classList.contains('is-active')) {
     findCragsButton.classList.remove('is-active');
   }
+  if (addCragsButton.classList.contains('is-active')) {
+    addCragsButton.classList.remove('is-active');
+  }
   if (!e.target.classList.contains('is-active')) {
     e.target.classList.add('is-active');
   }
   clearForecasts();
+  forecastArea.style.marginTop = '80px';
   searchArea.style.display = 'none';
+  addCragsArea.style.display = 'none';
   if (user.favorites.length) {
     renderForecasts(user.favorites);
   }
 });
 
-findCragsButton.addEventListener('click', (e) => {
+addCragsButton.addEventListener('click', (e) => {
+  if (findCragsButton.classList.contains('is-active')) {
+    findCragsButton.classList.remove('is-active');
+  }
   if (favoriteButton.classList.contains('is-active')) {
     favoriteButton.classList.remove('is-active');
   }
@@ -235,8 +254,53 @@ findCragsButton.addEventListener('click', (e) => {
     e.target.classList.add('is-active');
   }
   clearForecasts();
+  searchArea.style.display = 'none';
+  forecastArea.style.display = 'none';
+  addCragsArea.style.display = 'flex';
+  if (cragAdded) {
+    renderForecasts(cragAdded);
+    forecastArea.style.marginTop = '20px';
+  } else {
+    forecastArea.style.display = 'none';
+  }
+});
+
+findCragsButton.addEventListener('click', (e) => {
+  if (favoriteButton.classList.contains('is-active')) {
+    favoriteButton.classList.remove('is-active');
+  }
+  if (addCragsButton.classList.contains('is-active')) {
+    addCragsButton.classList.remove('is-active');
+  }
+  if (!e.target.classList.contains('is-active')) {
+    e.target.classList.add('is-active');
+  }
+  clearForecasts();
+  forecastArea.style.marginTop = '20px';
+  addCragsArea.style.display = 'none';
   searchArea.style.display = 'block';
   if (searchResults) {
     renderForecasts(searchResults);
+  } else {
+    forecastArea.style.display = 'none';
+  }
+});
+
+const addCragButton = document.querySelector('#crag-submit');
+const cragName = document.querySelector('#crag-name').querySelector('input');
+const cragLat = document.querySelector('#crag-lat').querySelector('input');
+const cragLng = document.querySelector('#crag-lng').querySelector('input');
+
+addCragButton.addEventListener('click', (e) => {
+  let name = cragName.value;
+  let lat = cragLat.value;
+  let lng = cragLng.value;
+
+  if (name && lat && lng) {
+    clearForecasts();
+    axios.post(`${path}/crags`, { name, lat, lng }).then(result => {
+      cragAdded = result.data.crag;
+      renderForecasts(cragAdded);
+    });
   }
 });
