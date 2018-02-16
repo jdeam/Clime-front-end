@@ -1,4 +1,4 @@
-const path = 'http://localhost:3000';
+const path = 'https://secret-sierra-19445.herokuapp.com';
 let user = JSON.parse(localStorage.getItem('user'));
 let searchResults = null;
 let cragAdded = null;
@@ -10,6 +10,7 @@ if (user) {
 } else {
   axios.post(`${path}/users/`).then(result => {
     user = result.data.user;
+    user.favorites = [];
     localStorage.setItem('user', JSON.stringify(user));
   });
 }
